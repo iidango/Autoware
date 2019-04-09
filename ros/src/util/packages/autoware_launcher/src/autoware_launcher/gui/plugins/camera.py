@@ -1,32 +1,29 @@
 from python_qt_binding import QtCore, QtWidgets
 from autoware_launcher.core import myutils
-from autoware_launcher.gui  import widgets
+from autoware_launcher.gui.plugins.basic import AwFileFrame
 
 
 
 def plugin_widgets():
-    return {}
+    return \
+    {
+        "calib" : AwCameraCalibFrame,
+    }
 
 
-"""
-class AwCameraCalibFrame(AwFileSelect):
+class AwCameraCalibFrame(AwFileFrame):
 
-    def __init__(self, guimgr, node, opts):
-        super(AwCameraCalibFrame, self).__init__(guimgr, node, opts)
+    def __init__(self, guimgr, node, view):
+        super(AwCameraCalibFrame, self).__init__(guimgr, node, view)
+        self.add_button(AwCameraCalibButton(self.field))
 
-        calib = QtWidgets.QPushButton("Calib")
-        calib.setCheckable(True)
-        calib.toggled.connect(self.calibrate)
-        self.add_button(calib)
 
-    def refresh_image_topic(self):
-        from subprocess import Popen, PIPE
-        command = "rostopic find sensor_msgs/Image"
-        process = Popen(command.split(), stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
-        self.topic_name.clear()
-        for topic in stdout.split("\n"):
-            if topic: self.topic_name.addItem(topic)
+class AwCameraCalibButton(QtWidgets.QPushButton):
+
+    def __init__(self, field, text = "Calib"):
+        super(AwCameraCalibButton, self).__init__(text)
+        self.__field = field
+        self.clicked.connect(self.calibrate)
 
     def calibrate(self, checked):
 
@@ -74,6 +71,15 @@ class AwCameraCalibFrame(AwFileSelect):
         window.setWindowModality(QtCore.Qt.ApplicationModal)
         window.show()
 
+    def refresh_image_topic(self):
+        from subprocess import Popen, PIPE
+        command = "rostopic find sensor_msgs/Image"
+        process = Popen(command.split(), stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate()
+        self.topic_name.clear()
+        for topic in stdout.split("\n"):
+            if topic: self.topic_name.addItem(topic)
+
     def select_intrinsic(self):
         import os
         filename, filetype = QtWidgets.QFileDialog.getOpenFileName(self, "Select File", os.path.expanduser("~"))
@@ -95,4 +101,3 @@ class AwCameraCalibFrame(AwFileSelect):
             self.extrinsic_calibrator.start(command )
         else:
             self.extrinsic_calibrator.terminate()
-"""
