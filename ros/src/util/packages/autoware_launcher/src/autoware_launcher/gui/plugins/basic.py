@@ -322,3 +322,40 @@ class AwFileListBrowseButton(QtWidgets.QPushButton):
         if filepaths:
             filepaths = [myutils.envpath(filepath) for filepath in filepaths]
             self.__field.update_value(filepaths)
+
+
+
+class AwToggleSwitch(QtWidgets.QSlider):
+
+    switchedOn = QtCore.pyqtSignal()
+    switchedOff = QtCore.pyqtSignal()
+
+    def __init__(self, default=0):
+        QtWidgets.QSlider.__init__(self, QtCore.Qt.Horizontal)
+
+        self.setMaximumWidth(30)
+        self.setMinimum(0)
+        self.setMaximum(1)
+        self.setSliderPosition(default)
+
+        self.sliderReleased.connect(self.toggle)
+        self.valueChanged.connect(self.emitSwitchedSignal)
+
+    def toggle(self):
+        if self.value() == 1:
+            self.setValue(0)
+        else:
+            self.setValue(1)
+    
+    def emitSwitchedSignal(self):
+        if self.value() == 1:
+            self.switchedOn.emit()
+        else:
+            self.switchedOff.emit()
+
+
+    def isOn(self):
+        if self.currentValue == 1:
+            return True
+        else:
+            return False

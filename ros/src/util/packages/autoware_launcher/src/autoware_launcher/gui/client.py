@@ -16,6 +16,7 @@ from .procmgr    import AwProcessPanel
 from .summary    import AwSummaryPanel
 from .network    import AwTcpServerPanel
 from .quickstart import AwQuickStartPanel
+from .fieldoperator import AwFieldOperatorPanel
 from .simulation import AwRosbagSimulatorWidget
 from .simulation import AwLgsvlSimulatorWidget
 from .simulation import AwGazeboSimulatorWidget
@@ -44,7 +45,6 @@ class AwQtGuiClient(object):
 
 
     def start(self, profile=None, skin=None):
-
         application = QtWidgets.QApplication(self.__sysarg)
         resolution = application.desktop().screenGeometry()
         resolution = min(resolution.width(), resolution.height())
@@ -61,6 +61,7 @@ class AwQtGuiClient(object):
         self.__process    = AwProcessPanel(self)  # ToDo: consider moving to guimgr
         self.__network    = AwTcpServerPanel()
         self.__quickstart = AwQuickStartPanel(self.__guimgr)
+        self.__fieldoperator = AwFieldOperatorPanel(self.__guimgr)
         self.__sim_rosbag = AwRosbagSimulatorWidget(self.__guimgr)
         self.__sim_lgsvl  = AwLgsvlSimulatorWidget (self.__guimgr)
         self.__sim_gazebo = AwGazeboSimulatorWidget(self.__guimgr)
@@ -91,6 +92,7 @@ class AwQtGuiClient(object):
         mainwidget.addWidget(self.__quickstart)
         mainwidget.addWidget(self.__develop)
         mainwidget.addWidget(self.__network)
+        mainwidget.addWidget(self.__fieldoperator)
 
         simulations = QtWidgets.QTabWidget()
         simulations.addTab(self.__sim_rosbag, "Rosbag")
@@ -123,6 +125,7 @@ class AwQtGuiClient(object):
         #mainwidget.setCurrentWidget(self.__develop)
         simulations.hide()
         self.__sim_rosbag.rosbag_file.path.setText(myutils.userhome(".autoware/log/20150324.bag"))
+        mainwidget.setCurrentWidget(self.__fieldoperator)
 
         # connect objects
         self.__server.register_runner(self.__process)
@@ -135,6 +138,7 @@ class AwQtGuiClient(object):
         self.__panels.append(self.__summary)
         self.__panels.append(self.__process)
         self.__panels.append(self.__quickstart)
+        self.__panels.append(self.__fieldoperator)
 
         self.__treeview.register_select_listener(self.__summary)
         self.__treeview.register_select_listener(self.__process)

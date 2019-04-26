@@ -8,6 +8,7 @@ setup_args = generate_distutils_setup(
         "autoware_launcher.tool",
         "autoware_launcher.core",
         "autoware_launcher.gui",
+        "autoware_launcher.gui.operations",
         "autoware_launcher.gui.simulation",
         "autoware_launcher.gui.plugins",
     ],
